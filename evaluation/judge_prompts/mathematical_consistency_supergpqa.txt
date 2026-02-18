@@ -1,0 +1,63 @@
+You are an expert judge evaluating INTERMEDIATE CONSISTENCY of reasoning steps in a multiple-choice question.
+
+Focus ONLY on whether intermediate results, variable values, choice references, and eliminations are correctly maintained between steps AND whether the final answer is consistent with the intermediate results. Do NOT evaluate final answer accuracy or logical flow.
+
+Model Output:
+{output}
+
+Evaluation Criteria - Check if:
+1. **Choice references are consistent**: If Step 2 mentions "Option A says X", does Step 3 correctly reference the same content for Option A?
+2. **Eliminations are maintained**: If Step 2 eliminates Option B, is Option B consistently treated as eliminated in subsequent steps?
+3. **Variable/value consistency**: If a calculation yields a specific value, is that same value used when referenced later?
+4. **Notation consistency**: If abbreviations or symbols are introduced, are they used consistently throughout?
+5. **Intermediate conclusions carried forward**: If Step 2 concludes "X is impossible", is this conclusion consistently applied in later steps?
+6. **Final answer consistency**: Does the final answer match the intermediate results and eliminations from the reasoning steps?
+
+IGNORE:
+- Whether the overall reasoning approach is correct
+- Whether the final answer is factually correct
+- Whether steps connect logically
+- Whether individual calculations are correct
+
+Focus ONLY on maintaining consistency of intermediate results, references, AND final answer alignment.
+
+Examples:
+
+GOOD Consistency:
+- Step 1: "Option A states the temperature is 25°C"
+- Step 2: "Since A says 25°C, this is too low for the process"
+- Step 3: "We can eliminate A because 25°C won't work"
+- Step 4: "Between B and C, option B gives the correct temperature"
+- Answer: B
+(Option A consistently referenced as 25°C, properly eliminated, and final answer B aligns with reasoning)
+
+BAD Consistency:
+- Step 1: "Option A states the temperature is 25°C"
+- Step 2: "Since A says 30°C, this might work"
+- Step 3: "A's temperature of 25°C seems reasonable"
+- Answer: A
+(Inconsistent: A's temperature changes from 25°C to 30°C and back, plus final answer contradicts Step 2's elimination)
+
+GOOD Consistency:
+- Step 1: "We can eliminate B and C due to wrong units"
+- Step 2: "Between remaining options A and D, A has the correct formula"
+- Step 3: "D has calculation errors"
+- Answer: A
+(Eliminations maintained, final answer A matches the reasoning)
+
+BAD Consistency:
+- Step 1: "We can eliminate B due to wrong units"
+- Step 2: "Comparing remaining options A, C, D..."
+- Step 3: "A looks most reasonable"
+- Answer: B
+(Inconsistent: B was eliminated but then chosen as final answer)
+
+Rate consistency from 0.0 to 1.0:
+- 1.0 = Perfect consistency in all references, intermediate results, and final answer alignment
+- 0.8 = Minor inconsistencies (1-2 small errors) but final answer aligns
+- 0.6 = Some values or references incorrectly carried forward, or minor final answer misalignment
+- 0.4 = Multiple inconsistencies in tracking, or clear final answer contradiction
+- 0.2 = Major errors in maintaining intermediate results and final answer misalignment
+- 0.0 = Severe inconsistencies throughout with major final answer contradiction
+
+CONSISTENCY_SCORE: [score]

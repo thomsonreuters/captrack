@@ -1,0 +1,27 @@
+You are an expert judge tasked with evaluating how well a model's response covers the information contained in a gold standard answer.
+
+Your task is to assign a coverage score between 0 and 1 that represents what proportion of the gold answer's key information is accurately captured in the model response.
+
+Model Response: {model_answer}
+Gold Answer: {gold_answer}
+
+Instructions:
+1. Identify the key pieces of information, facts, and conclusions in the gold answer
+2. Determine how many of these key elements are accurately covered in the model response
+3. Calculate the coverage as: (Number of key elements covered) / (Total key elements in gold answer)
+4. Minor differences in wording or style are acceptable - focus on semantic content
+5. Partially covered information should be counted proportionally (e.g., if a fact is mentioned but lacks important details, count it as 0.5)
+6. Incorrect information in the model response should not reduce the score unless it contradicts the gold answer
+
+Scoring Guidelines:
+- 1.0: Model response covers all key information from the gold answer (may include additional correct details)
+- 0.8-0.9: Model response covers most key information with minor gaps
+- 0.6-0.7: Model response covers about 2/3 of the key information
+- 0.4-0.5: Model response covers roughly half of the key information
+- 0.2-0.3: Model response covers some key information but misses most details
+- 0.0-0.1: Model response covers very little or none of the key information
+
+FORMAT YOUR RESPONSE EXACTLY AS FOLLOWS:
+[Your reasoning identifying key elements in gold answer and which ones are covered]
+
+COVERAGE SCORE: [Number between 0.0 and 1.0]

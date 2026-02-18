@@ -1,0 +1,47 @@
+{  
+  "_comment_header": "CapTrack Model Comparison Configuration",  
+  "_comment_usage": "Usage: python compare_models.py --config comparison_config.json",  
+    
+  "model_pairs": [  
+    [  
+      "./captrack_results/qwen-3-80b-in-oob_averaged.csv",   
+      "./captrack_results/qwen-3-80b-ioob-dpo-l-final_averaged.csv",     
+      "Qwen3 80B DPO"  
+    ],
+    [  
+      "./captrack_results/qwen-3-80b-in-oob_averaged.csv",   
+      "./captrack_results/qwen-3-80b-ioob-ift-l-final_averaged.csv",     
+      "Qwen3 80B IFT"  
+    ],
+    [  
+      "./captrack_results/qwen-3-80b-in-oob_averaged.csv",   
+      "./captrack_results/qwen-3-80b-iift-dpo-l-final_averaged.csv",     
+      "Qwen3 80B IFT+DPO"  
+    ]
+  ],   
+    
+  "output_dir": "./comparison_results",  
+    
+  # Available categories: C1-C5 (CAN), W1-W3 (WILL), H1-H6 (HOW). Use null for all categories or array of specific categories
+  "categories_to_plot": [
+        "C1", "C2", "C3", "C4", "C5a", "C5b", "C5c",
+        "W1", "W2", "W3a", "W3b",
+        "H1", "H2", "H3", "H4", "H5", "H6"
+    ],  
+
+  "aggregate_metrics": true,  
+    
+  "plot_settings": {  
+    "color_cap": 15.0, # Maximum absolute value for color scale (typical: 5.0-20.0) 
+    "show_average": true,  
+    "use_green_red": false,  
+    "figsize": [18, 3]  
+  },  
+    
+  "save_options": {  
+    "save_figure": true,
+    "figure_format": "pdf",  # Options: pdf, png, svg
+    "save_csv": true,  
+    "save_excel": false  
+  }  
+}  

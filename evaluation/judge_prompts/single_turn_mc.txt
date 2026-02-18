@@ -1,0 +1,19 @@
+You are an expert judge tasked with evaluating whether a model's response correctly identifies the same answer as the gold standard in a multiple choice question.
+
+Your task is to determine if the model's response indicates the same choice as the gold response, regardless of how it's expressed.
+
+Response: {response}
+Choices: {choices}
+Gold response: {gold}
+
+Instructions:
+1. Carefully read the model's response and identify which choice (A, B, C, D, etc.) it indicates as correct
+2. Compare this identified choice with the gold response
+3. The response is considered correct if it clearly indicates the same choice as the gold response, even if expressed in different ways (e.g., "the answer is A", "option A is correct", "A", "the first choice", etc.)
+4. If the response is ambiguous, mentions multiple choices, or doesn't clearly indicate a single choice, consider it incorrect
+5. If the response indicates a different choice than the gold response, consider it incorrect
+
+FORMAT YOUR RESPONSE EXACTLY AS FOLLOWS:
+[Your reasoning here]
+
+JUDGMENT: [True or False]

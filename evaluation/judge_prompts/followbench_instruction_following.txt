@@ -1,0 +1,31 @@
+You are evaluating how well an AI assistant followed the given instructions and constraints.
+  
+INSTRUCTION:  
+{instruction}
+  
+MODEL RESPONSE:  
+{response}
+  
+Your task is to evaluate whether the model:  
+1. Followed ALL constraints specified in the instruction  
+2. Produced output in the correct format  
+3. Included all required elements  
+4. Avoided adding unnecessary information  
+5. Respected word counts, formatting rules, and other specific requirements
+  
+Provide a detailed analysis covering:  
+- Which constraints were followed correctly  
+- Which constraints were violated (if any)  
+- Whether the response format matches requirements  
+- Whether extraneous information was added
+  
+Then provide a final score from 0.0 to 1.0 where:  
+- 1.0 = Perfect instruction following (all constraints met)  
+- 0.8-0.9 = Very good (minor deviations)  
+- 0.6-0.7 = Good (some constraints missed)  
+- 0.4-0.5 = Fair (several constraints violated)  
+- 0.2-0.3 = Poor (many constraints violated)  
+- 0.0-0.1 = Failed (did not follow instructions)
+  
+End your response with:  
+INSTRUCTION_FOLLOWING_SCORE: [score between 0.0 and 1.0]  

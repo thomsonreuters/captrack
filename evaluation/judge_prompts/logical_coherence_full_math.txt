@@ -1,0 +1,74 @@
+You are an expert judge evaluating the LOGICAL COHERENCE of mathematical reasoning.
+
+Focus ONLY on whether the reasoning flows logically from start to finish. Do NOT evaluate mathematical accuracy, calculation correctness, or consistency of intermediate values.
+
+Model Output:
+{output}
+
+Evaluation Criteria:
+
+**LOCAL COHERENCE (Step-to-Step Flow):**
+1. Does each mathematical step logically follow from the previous step(s)?
+2. Are mathematical operations applied in a logical sequence?
+3. Does each transformation have a clear mathematical justification?
+4. Are there any logical jumps where the connection between steps is unclear?
+
+**GLOBAL COHERENCE (Overall Solution Strategy):**
+5. Does the solution follow a coherent problem-solving strategy?
+6. Is there a clear progression from problem setup to solution?
+7. Are all steps relevant to solving the problem?
+8. Does the reasoning maintain focus on the goal throughout?
+
+**MATHEMATICAL REASONING QUALITY:**
+- Proper setup of equations and variables
+- Logical application of mathematical principles and formulas
+- Clear justification for mathematical operations (e.g., "divide both sides by 2")
+- Appropriate use of mathematical techniques for the problem type
+- No circular reasoning or logical contradictions
+
+**COMMON COHERENCE PROBLEMS TO IDENTIFY:**
+- Applying operations without clear justification
+- Sudden changes in approach without explanation
+- Steps that don't contribute to solving the problem
+- Missing intermediate steps that would clarify the logic
+- Abandoning one solution method for another without reason
+- Conclusions that don't follow from the preceding work
+
+Examples:
+
+**HIGH COHERENCE (Score: 0.9-1.0):**
+"We need to solve 2x + 3 = 7 for x. First, isolate the term with x by subtracting 3 from both sides: 2x = 4. Now divide both sides by 2 to solve for x: x = 2. We can verify: 2(2) + 3 = 7 ✓"
+
+Analysis: Clear logical progression, each step justified, operations applied systematically, verification adds closure.
+
+**MODERATE COHERENCE (Score: 0.5-0.7):**
+"For 2x + 3 = 7, we get 2x = 4. Then x = 2. This works because 2(2) + 3 = 7."
+
+Analysis: Reaches correct conclusion with logical flow, but some steps lack explicit justification (why subtract 3? why divide by 2?), overall strategy is clear.
+
+**LOW COHERENCE (Score: 0.0-0.4):**
+"Looking at 2x + 3 = 7. We have 2x. The answer is x = 2. We can use 2x + 3. So x = 2."
+
+Analysis: Disconnected steps, unclear how conclusion was reached, no clear logical flow, missing justification for operations.
+
+Rate logical coherence from 0.0 to 1.0:
+- 1.0 = Perfect logical flow with clear justification for every step
+- 0.9 = Excellent coherence with minor omissions in justification
+- 0.8 = Good logical flow with occasional unclear transitions
+- 0.7 = Generally coherent but some operations lack clear justification
+- 0.6 = Adequate overall strategy but several logical gaps
+- 0.5 = Mixed coherence with both clear and unclear segments
+- 0.4 = Weak logical flow with frequent unexplained steps
+- 0.3 = Poor coherence with many disconnected operations
+- 0.2 = Very poor logical structure, mostly unjustified steps
+- 0.1 = Severely incoherent with no clear problem-solving approach
+- 0.0 = Completely incoherent or no reasoning present
+
+FORMAT YOUR RESPONSE EXACTLY AS FOLLOWS:
+[Your analysis of local coherence (step-to-step)]
+
+[Your analysis of global coherence (overall strategy)]
+
+[Specific coherence strengths and weaknesses identified]
+
+COHERENCE_SCORE: [score between 0.0 and 1.0]

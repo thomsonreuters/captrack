@@ -1,0 +1,74 @@
+You are an expert judge evaluating the LOGICAL COHERENCE of reasoning in a multiple-choice question response.
+
+Focus ONLY on whether the reasoning flows logically from start to finish. Do NOT evaluate mathematical accuracy, final answer correctness, or consistency of intermediate values.
+
+Model Output:
+{output}
+
+Evaluation Criteria:
+
+**LOCAL COHERENCE (Step-to-Step Flow):**
+1. Does each reasoning step logically follow from the previous step(s)?
+2. Are there clear connections between consecutive steps?
+3. Does each step build upon information established earlier?
+4. Are there any logical jumps or gaps where steps don't connect?
+
+**GLOBAL COHERENCE (Overall Argument Structure):**
+5. Does the reasoning maintain a consistent focus on answering the question?
+6. Is there a clear progression from problem analysis to conclusion?
+7. Does the reasoning follow a coherent strategy (e.g., elimination, comparison, analysis)?
+8. Are all steps relevant to reaching the final answer?
+
+**REASONING QUALITY INDICATORS:**
+- Proper use of given information and constraints
+- Logical connections using words like "therefore," "since," "because," "thus"
+- Each step has a clear purpose in the overall argument
+- No circular reasoning or contradictory logic
+- Options are analyzed systematically
+
+**COMMON COHERENCE PROBLEMS TO IDENTIFY:**
+- Sudden topic changes without explanation
+- Steps that don't relate to previous or subsequent steps
+- Conclusions drawn without supporting reasoning
+- Abandoning one line of reasoning for another without justification
+- Analyzing options in a disorganized or incomplete manner
+- Missing logical bridges between steps
+
+Examples:
+
+**HIGH COHERENCE (Score: 0.9-1.0):**
+"Let's analyze each option systematically. Option A states X, which contradicts the given constraint Y. Therefore, A cannot be correct. Option B claims Z, and this aligns with constraint Y. Examining B more closely, we see it also satisfies condition W. Options C and D both fail to account for constraint Y, similar to A. Since only B satisfies all constraints, the answer is B."
+
+Analysis: Clear progression, each step builds on previous analysis, systematic elimination, logical connectors present, maintains focus throughout.
+
+**MODERATE COHERENCE (Score: 0.5-0.7):**
+"Option A says X. This seems wrong. Looking at B, it has property Z. The question asks about Y. Option C might work because it mentions Y. Actually, B is better because Z is related to Y. The answer is B."
+
+Analysis: Reaches a conclusion but reasoning is somewhat disjointed, lacks clear logical flow, some steps don't clearly connect, but maintains general focus on the problem.
+
+**LOW COHERENCE (Score: 0.0-0.4):**
+"Option A has X. The temperature is important. B mentions pressure. We need to find the answer. C and D are similar. Pressure affects temperature. The answer is B."
+
+Analysis: Steps are disconnected, no clear logical progression, unclear how conclusion was reached, reasoning jumps between topics without connection.
+
+Rate logical coherence from 0.0 to 1.0:
+- 1.0 = Perfect logical flow with clear connections throughout, systematic analysis
+- 0.9 = Excellent coherence with minor gaps in explanation
+- 0.8 = Good logical flow with occasional unclear transitions
+- 0.7 = Generally coherent but some steps lack clear connection
+- 0.6 = Adequate overall structure but several logical gaps
+- 0.5 = Mixed coherence with both connected and disconnected segments
+- 0.4 = Weak logical flow with frequent gaps
+- 0.3 = Poor coherence with many disconnected steps
+- 0.2 = Very poor logical structure, mostly disconnected reasoning
+- 0.1 = Severely incoherent with no clear logical progression
+- 0.0 = Completely incoherent or no reasoning present
+
+FORMAT YOUR RESPONSE EXACTLY AS FOLLOWS:
+[Your analysis of local coherence (step-to-step)]
+
+[Your analysis of global coherence (overall structure)]
+
+[Specific coherence strengths and weaknesses identified]
+
+COHERENCE_SCORE: [score between 0.0 and 1.0]

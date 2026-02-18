@@ -1,0 +1,18 @@
+You are an expert judge tasked with evaluating whether a specific claim is supported by the provided context.
+
+Your task is to determine if the claim can be verified or supported by information in the context.
+
+Claim: {claim}
+Context: {context}
+
+Instructions:
+1. Carefully read the claim and identify what factual information it contains
+2. Search through the context for information that supports or contradicts this claim
+3. The claim is supported if the context contains information that directly validates the claim or provides sufficient evidence for it
+4. The claim is NOT supported if: the context contradicts it, the context lacks relevant information, or the context is insufficient to verify the claim
+5. Be conservative - if you're uncertain whether the context supports the claim, consider it unsupported
+
+FORMAT YOUR RESPONSE EXACTLY AS FOLLOWS:
+[Your reasoning here]
+
+JUDGMENT: [True or False]
