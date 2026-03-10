@@ -25,7 +25,7 @@ These changes often remain invisible to standard evaluation pipelines that prima
 This repository implements the **metric computation and comparison stage** of the CapTrack workflow.
 
 ## CapTrack Taxonomy and Evaluation Suite
-The following table provides an overview of the CapTrack taxonomy and evaluation suite, highlighting the capabilities, benchmarks, and metrics covered. For further details, see [the CapTrack paper](paper).
+The following table provides an overview of the CapTrack taxonomy and evaluation suite, highlighting the capabilities, benchmarks, and metrics covered. For further details, see [the CapTrack paper](https://arxiv.org/abs/2603.06610).
 
 <img src="taxonomy/captrack_taxonomy.png" alt="CapTrack Taxonomy" style="max-width: 100%; height: auto;">
 
