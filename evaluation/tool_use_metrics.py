@@ -10,6 +10,7 @@ argument accuracy (correct parameters), and integration accuracy (both correct).
 import re    
 import json    
 from typing import Dict, List, Any, Optional, Tuple  
+import numpy as np
 import pandas as pd
 
   
@@ -264,6 +265,10 @@ def parse_mnms_gold_format(gold_data: Any) -> List[Dict[str, Any]]:
     """  
     if not gold_data:    
         return []
+
+    # Gold may be stored as a one-element list holding the string representation
+    if isinstance(gold_data, (list, tuple, np.ndarray)) and len(gold_data) == 1 and isinstance(gold_data[0], str):
+        gold_data = gold_data[0]
         
     # Handle string representation of list    
     if isinstance(gold_data, str):    

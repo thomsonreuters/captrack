@@ -34,9 +34,9 @@ TAXONOMY_CONFIG = {
     "C1": {
         "name": "Parametric Knowledge & Skills",
         "benchmarks": [
-            BenchmarkConfig("mmlu_pro.core", "accuracy", "CAN", "C1", "Accuracy (MMLU-Pro)", COLORS['blue']), # scale [0,1]
+            BenchmarkConfig("mmlu_pro.subset", "accuracy", "CAN", "C1", "Accuracy (MMLU-Pro)", COLORS['blue']), # scale [0,1]
             BenchmarkConfig("popqa.subset", "accuracy", "CAN", "C1", "Accuracy (PopQA)", COLORS['blue']), # scale [0,1]
-            BenchmarkConfig("gsm8k.core", "accuracy", "CAN", "C1", "Accuracy (GSM8K)", COLORS['green']), # scale [0,1]
+            BenchmarkConfig("gsm8k.subset", "accuracy", "CAN", "C1", "Accuracy (GSM8K)", COLORS['green']), # scale [0,1]
             BenchmarkConfig("livemathbench.full", "accuracy", "CAN", "C1", "Accuracy (livemathbench)", COLORS['green']), # scale [0,1]
             BenchmarkConfig("humaneval.full", "accuracy", "CAN", "C1", "Accuracy (HumanEval)", COLORS['yellow']), # scale [0,1]
             BenchmarkConfig("mbpp.full", "accuracy", "CAN", "C1", "Accuracy (mbpp)", COLORS['yellow']), # scale [0,1]
@@ -73,17 +73,17 @@ TAXONOMY_CONFIG = {
     "C3": {
         "name": "Contextual Comprehension (ICL)",
         "benchmarks": [
-            BenchmarkConfig("hotpotqa.core", "accuracy", "CAN", "C3a", "Accuracy (HotpotQA)", COLORS['green']), # scale [0,1]
-            BenchmarkConfig("hotpotqa.core", "evidence_hit_rate", "CAN", "C3", "Evidence Hit (HotpotQA)", COLORS['lightgreen']), # scale [0,1]
-            BenchmarkConfig("boolq.core", "accuracy", "CAN", "C3", "Accuracy (BoolQ)", COLORS['green']),  # scale [0,1]
-            BenchmarkConfig("boolq.core", "evidence_hit_rate", "CAN", "C3", "Evidence Hit (BoolQ)", COLORS['lightgreen']), # scale [0,1]
+            BenchmarkConfig("hotpotqa.subset", "accuracy", "CAN", "C3a", "Accuracy (HotpotQA)", COLORS['green']), # scale [0,1]
+            BenchmarkConfig("hotpotqa.subset", "evidence_hit_rate", "CAN", "C3", "Evidence Hit (HotpotQA)", COLORS['lightgreen']), # scale [0,1]
+            BenchmarkConfig("boolq.subset", "accuracy", "CAN", "C3", "Accuracy (BoolQ)", COLORS['green']),  # scale [0,1]
+            BenchmarkConfig("boolq.subset", "evidence_hit_rate", "CAN", "C3", "Evidence Hit (BoolQ)", COLORS['lightgreen']), # scale [0,1]
         ]
     },
     "C4": {
         "name": "Epistemic Faithfulness & Grounding",
         "benchmarks": [
-            #BenchmarkConfig("ragtruth.core", "coverage_score", "CAN", "C4", "RAGTruth (Coverage)"),  # scale [0,1]
-            BenchmarkConfig("ragtruth.core", "faithfulness_score", "CAN", "C4", "Faithfulness (RAGTruth)", COLORS['purple']),
+            #BenchmarkConfig("ragtruth.subset", "coverage_score", "CAN", "C4", "RAGTruth (Coverage)"),  # scale [0,1]
+            BenchmarkConfig("ragtruth.subset", "faithfulness_score", "CAN", "C4", "Faithfulness (RAGTruth)", COLORS['purple']),
             BenchmarkConfig("truthfulqa.full", "accuracy", "CAN", "C4", "Accuracy (TruthfulQA)", COLORS['purple']),
         ]
     },
@@ -99,15 +99,15 @@ TAXONOMY_CONFIG = {
         "name": "Robustness of Competence",
         "benchmarks": [
             # C5b - Domain shift robustness
-            BenchmarkConfig("winogrande.core", "accuracy", "CAN", "C5b", "Domain Shift (WinoGrande)", COLORS['purple']), # scale [0,1]
-            BenchmarkConfig("hellaswag.core", "accuracy", "CAN", "C5b", "Domain Shift (HellaSwag)", COLORS['brown']), # scale [0,1]
+            BenchmarkConfig("winogrande.subset", "accuracy", "CAN", "C5b", "Domain Shift (WinoGrande)", COLORS['purple']), # scale [0,1]
+            BenchmarkConfig("hellaswag.subset", "accuracy", "CAN", "C5b", "Domain Shift (HellaSwag)", COLORS['brown']), # scale [0,1]
         ]
     },
     "C5c": {
         "name": "Robustness of Competence",
         "benchmarks": [
             # C5c - Multilingual stability
-            BenchmarkConfig("mgsm.core", "accuracy", "CAN", "C5c", "Multilingual (MGSM)", COLORS['darkpink']), # scale [0,1]
+            BenchmarkConfig("mgsm.subset", "accuracy", "CAN", "C5c", "Multilingual (MGSM)", COLORS['darkpink']), # scale [0,1]
             BenchmarkConfig("xtreme.subset", "accuracy", "CAN", "C5c", "Multilingual (XTREME)", COLORS['darkpink']), # scale [0,1]
         ]
     },
@@ -145,23 +145,23 @@ TAXONOMY_CONFIG = {
     "W2": {
         "name": "Helpfulness & Informational Scope",
         "benchmarks": [
-            BenchmarkConfig("ragtruth.core", "coverage_score", "WILL", "W3", "Coverage (RAGTruth)", COLORS['lightgreen']), # scale [0,1]
+            BenchmarkConfig("ragtruth.subset", "coverage_score", "WILL", "W3", "Coverage (RAGTruth)", COLORS['lightgreen']), # scale [0,1]
             BenchmarkConfig("eli5.subset", "coverage_score", "WILL", "W3", "Coverage (ELI5)", COLORS['lightgreen']), # scale [0,1]
-            BenchmarkConfig("ragtruth.core", "overreach_score", "WILL", "W3", "Overreach (RAGTruth)", COLORS['orange']), # scale [0,1]
+            BenchmarkConfig("ragtruth.subset", "overreach_score", "WILL", "W3", "Overreach (RAGTruth)", COLORS['orange']), # scale [0,1]
             BenchmarkConfig("eli5.subset", "overreach_score", "WILL", "W3", "Overreach (ELI5)", COLORS['orange']), # scale [0,1]
         ]
     },
     "W2a": {
         "name": "Helpfulness & Informational Scope",
         "benchmarks": [
-            BenchmarkConfig("ragtruth.core", "coverage_score", "WILL", "W3", "Coverage (RAGTruth)", COLORS['lightgreen']), # scale [0,1]
+            BenchmarkConfig("ragtruth.subset", "coverage_score", "WILL", "W3", "Coverage (RAGTruth)", COLORS['lightgreen']), # scale [0,1]
             BenchmarkConfig("eli5.subset", "coverage_score", "WILL", "W3", "Coverage (ELI5)", COLORS['lightgreen']), # scale [0,1]
         ]
     },
     "W2b": {
         "name": "Helpfulness & Informational Scope",
         "benchmarks": [
-            BenchmarkConfig("ragtruth.core", "overreach_rate", "WILL", "W3", "Overreach (RAGTruth)", COLORS['orange']), # scale [0,1]
+            BenchmarkConfig("ragtruth.subset", "overreach_rate", "WILL", "W3", "Overreach (RAGTruth)", COLORS['orange']), # scale [0,1]
             BenchmarkConfig("eli5.subset", "overreach_rate", "WILL", "W3", "Overreach (ELI5)", COLORS['orange']), # scale [0,1]
         ]
     },
@@ -218,23 +218,23 @@ TAXONOMY_CONFIG = {
     "H1": {
         "name": "Instruction Following & Constraint Satisfaction",
         "benchmarks": [
-            BenchmarkConfig("ifeval.core", ["strict", "perfect_compliance_rate"], "HOW", "H1", "Pass Rate (IFEval)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "perfect_compliance_rate"], "HOW", "H1", "Pass Rate (IFEval)", COLORS['yellow']),  # scale [0,1]
             BenchmarkConfig("followbench.subset", "accuracy", "HOW", "H1", "Accuracy (FollowBench)", COLORS['yellow']),  # scale [0,1]
         ]
     },
     "H1_DD": {
         "name": "Instruction Following & Constraint Satisfaction",
         "benchmarks": [
-            BenchmarkConfig("ifeval.core", ["strict", "perfect_compliance_rate"], "HOW", "H1", "Pass Rate (strict)", COLORS['yellow']),  # scale [0,1]
-            BenchmarkConfig("ifeval.core", ["strict", "tier0_pass_rates", "punctuation"], "HOW", "H1", "Pass Rate (punctuation)", COLORS['yellow']),  # scale [0,1]
-            BenchmarkConfig("ifeval.core", ["strict", "tier0_pass_rates", "detectable_format"], "HOW", "H1", "Pass Rate (detectable_format)", COLORS['yellow']),  # scale [0,1]
-            BenchmarkConfig("ifeval.core", ["strict", "tier0_pass_rates", "length_constraints"], "HOW", "H1", "Pass Rate (length_constraints)", COLORS['yellow']),  # scale [0,1]
-            BenchmarkConfig("ifeval.core", ["strict", "tier0_pass_rates", "detectable_content"], "HOW", "H1", "Pass Rate (detectable_content)", COLORS['yellow']),  # scale [0,1]
-            BenchmarkConfig("ifeval.core", ["strict", "tier0_pass_rates", "combination"], "HOW", "H1", "Pass Rate (combination)", COLORS['yellow']),  # scale [0,1]
-            BenchmarkConfig("ifeval.core", ["strict", "tier0_pass_rates", "change_case"], "HOW", "H1", "Pass Rate (change_case)", COLORS['yellow']),  # scale [0,1]
-            BenchmarkConfig("ifeval.core", ["strict", "tier0_pass_rates", "startend"], "HOW", "H1", "Pass Rate (startend)", COLORS['yellow']),  # scale [0,1]
-            BenchmarkConfig("ifeval.core", ["strict", "tier0_pass_rates", "keywords"], "HOW", "H1", "Pass Rate (keywords)", COLORS['yellow']),  # scale [0,1]
-            BenchmarkConfig("ifeval.core", ["strict", "tier0_pass_rates", "language"], "HOW", "H1", "Pass Rate (language)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "perfect_compliance_rate"], "HOW", "H1", "Pass Rate (strict)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "tier0_pass_rates", "punctuation"], "HOW", "H1", "Pass Rate (punctuation)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "tier0_pass_rates", "detectable_format"], "HOW", "H1", "Pass Rate (detectable_format)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "tier0_pass_rates", "length_constraints"], "HOW", "H1", "Pass Rate (length_constraints)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "tier0_pass_rates", "detectable_content"], "HOW", "H1", "Pass Rate (detectable_content)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "tier0_pass_rates", "combination"], "HOW", "H1", "Pass Rate (combination)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "tier0_pass_rates", "change_case"], "HOW", "H1", "Pass Rate (change_case)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "tier0_pass_rates", "startend"], "HOW", "H1", "Pass Rate (startend)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "tier0_pass_rates", "keywords"], "HOW", "H1", "Pass Rate (keywords)", COLORS['yellow']),  # scale [0,1]
+            BenchmarkConfig("ifeval.subset", ["strict", "tier0_pass_rates", "language"], "HOW", "H1", "Pass Rate (language)", COLORS['yellow']),  # scale [0,1]
             BenchmarkConfig("followbench.subset", "accuracy", "HOW", "H1", "Followbench Score", COLORS['yellow']),  # scale [0,1]
         ]
     },
