@@ -93,6 +93,10 @@ def main():
     for _, name in models:
         logger.info(f"\n{'=' * 60}\n[2/3] Metrics: {name}\n{'=' * 60}")
         metrics = compute_captrack_metrics(data_dir=args.responses_dir, tasks=args.tasks, model_name=name)
+        requested_tasks = args.tasks or list(TASK_CONFIGS)
+        failed_tasks = [task for task in requested_tasks if task not in metrics or "error" in metrics[task]]
+        if failed_tasks:
+            raise RuntimeError(f"Metric computation failed for '{name}': {', '.join(failed_tasks)}")
         metric_files.append(str(save_metrics(metrics, args.results_dir, name)))
 
     # 3. Comparison
