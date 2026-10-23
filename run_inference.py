@@ -62,6 +62,11 @@ SECOND_TURN_TASKS = {
     "structflowbench.turn2": "structflowbench.turn1",
 }
 
+# Tasks scored on the model's reasoning steps: compute_math_supergpqa_accuracy parses both the
+# intermediate steps and the final answer from `outputs`. A thinking model may place its steps
+# inside <think>...</think>, so keep their raw output instead of stripping it (see generate()).
+REASONING_TASKS = {"math.subset", "supergpqa.subset"}
+
 DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant."
 
 # Maximum number of generated tokens. Kept generous so natural responses are never cut off.
@@ -221,7 +226,12 @@ class Generator:
             raise ValueError(f"No context remains for generation with max_model_len={self.max_model_len}")
         params = SamplingParams(temperature=0.0, top_p=1.0, max_tokens=max_tokens)
         outputs = self.llm.chat(conversations, params, chat_template_kwargs=self.chat_template_kwargs)
-        # Drop reasoning traces of thinking models so answer parsers see the final response only
+        # Drop reasoning traces of thinking models so answer parsers see the final response only.
+        # Exception: REASONING_TASKS are graded on the model's intermediate steps, which a thinking
+        # model may place inside <think>...</think>; keep their raw output so the reasoning scorer
+        # can parse both the steps and the final answer.
+        if task in REASONING_TASKS:
+            return [o.outputs[0].text for o in outputs]
         return [re.sub(r"^.*?</think>\s*", "", o.outputs[0].text, flags=re.S) for o in outputs]
 
 
