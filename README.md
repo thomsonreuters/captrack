@@ -3,7 +3,7 @@
 CapTrack is an evaluation framework for analyzing **capability-level forgetting** and behavioral drift in large language models (LLMs), e.g. after post-training.
 
 This repository contains the **evaluation component** of CapTrack. It computes capability-level metrics from model outputs and enables **relative comparison between a base model and adapted models**.
-CapTrack does **not** include model training, inference pipelines, or response generation. Instead, it assumes that model responses have already been generated and stored locally.
+CapTrack does **not** include model training. Model responses can be generated with the included minimal vLLM inference pipeline (`run_inference.py`) or with any existing inference setup; metric computation only assumes that the responses are stored locally.
 
 The goal of this repository is to make capability-level evaluation **simple, transparent, and easy to integrate into existing evaluation pipelines**.
 
@@ -36,8 +36,8 @@ The following table provides an overview of the CapTrack taxonomy and evaluation
 Clone the repository:
 
 ```bash
-git clone https://github.com/tr/captrack_evaluation_suite.git
-cd captrack_evaluation_suite
+git clone https://github.com/thomsonreuters/captrack.git
+cd captrack
 ```
 
 Create environment:
@@ -47,6 +47,12 @@ conda env create -f environment.yml
 # or 
 mamba env create -f environment.yml
 conda activate captrack
+```
+
+Optional: to generate model responses with the built-in vLLM pipeline, create a separate inference environment (Linux with CUDA GPUs). It is kept separate because vLLM pins its own `torch`/`transformers`/`numpy` versions, which conflict with the pinned metric dependencies:
+
+```bash
+conda env create -f environment-inference.yml   # creates the env "captrack-vllm"
 ```
 
 ### LLM Judge Setup
@@ -117,6 +123,8 @@ TASK_CONFIGS["ragtruth.subset"] = {
 ```
 captrack/
 │
+├── run_captrack.py        # End-to-end evaluation: inference, metrics, comparison
+├── run_inference.py       # Minimal vLLM inference on the CapTrack tasks
 ├── compute_metrics.py     # Metric computation entry point
 ├── compare_models.py      # Relative comparison and forgetting analysis
 ├── evaluation/		       # Metrics and scoring logic
@@ -130,18 +138,60 @@ captrack/
 
 ---
 
+## Quickstart: End-to-End Evaluation
+
+Given a base checkpoint and an adapted checkpoint (Hugging Face model ids or local paths), `run_captrack.py` runs inference for both models, computes all CapTrack metrics, and produces the relative comparison:
+
+```bash
+conda activate captrack
+export OPENAI_API_KEY="..."   # LLM judge, see LLM Judge Setup
+
+python run_captrack.py \
+    --base meta-llama/Llama-3.1-8B-Instruct \
+    --adapted ./checkpoints/llama-3.1-8b-legal-ift \
+    --inference_python $(conda run -n captrack-vllm which python)
+```
+
+This runs the three workflow steps below and writes responses to `model_responses/`, metrics to `captrack_results/`, and the heatmap to `comparison_results/`. Inference resumes where it stopped: tasks that already have responses are skipped. Options that `run_captrack.py` does not know are forwarded to `run_inference.py`, e.g.:
+
+- `--limit 20` — quick smoke test on the first 20 samples per task,
+- `--max_model_len 130000` — context length used in the paper (default: the model's native length),
+- `--tensor_parallel_size 4` — number of GPUs (default: all visible GPUs),
+- `--chat_template_kwargs '{"enable_thinking": false}'` — e.g. for hybrid thinking models,
+- `--vllm_kwargs '{"trust_remote_code": true}'` — any further `vllm.LLM` argument (e.g. RoPE scaling via `hf_overrides`).
+
+The adapted model is expected as a single checkpoint; merge LoRA adapters into the base weights first.
+
+---
+
 ## CapTrack Workflow
 
 The intended workflow is:
 
-### Step 1 — Generate Model Responses on CapTrack Tasks (External)
+### Step 1 — Generate Model Responses on CapTrack Tasks
 
-Download the CapTrack datasets from Hugging Face:
+The CapTrack datasets are available on Hugging Face:
 ```
 https://huggingface.co/datasets/tri-fair-lab/captrack
 ```
 
-Users generate model responses using **their own inference pipeline**.
+#### Option A: Built-in vLLM Inference
+
+```bash
+conda activate captrack-vllm
+python run_inference.py --model <hf_model_id_or_checkpoint_path> [--name <model_name>]
+```
+
+`run_inference.py` downloads the task data and writes one file per task to `model_responses/<model_name>/`, ready for Step 2. It follows the inference protocol of the paper:
+
+- the task's `formatted_prompt` is the user message, preceded by a system prompt (`--system_prompt`, default: "You are a helpful assistant."), rendered with the model's chat template,
+- deterministic decoding (temperature 0, top-p 1) with generous per-task output limits, so natural responses are not cut off,
+- multi-turn tasks (MT-Bench, StructFlowBench) are generated in two passes: turn 2 is answered with the turn-1 prompt and the model's own turn-1 response in context,
+- prompts that exceed the context window are truncated in the middle (a warning reports how many).
+
+#### Option B: Your Own Inference Pipeline
+
+Model responses can also be generated with **any existing inference pipeline**.
 The only requirement is that model outputs are saved in the expected directory structure (see below).
 
 #### Expected Input Format
@@ -166,7 +216,7 @@ Each response file must contain:
 - the model response
 - the ogiginal colums of the task data (e.g. gold responses, tool specs., ...)
 
-The model response column can be configured using the `--output-column` flag of `compute_metrics.py`, allowing CapTrack to be integrated without modifying existing inference code.
+The model response column can be configured using the `--output_column` flag of `compute_metrics.py`, allowing CapTrack to be integrated without modifying existing inference code.
 
 
 ---
@@ -178,7 +228,7 @@ Once model responses are generated, CapTrack computes benchmark-level metrics, a
 This step is performed independently for each model.
 
 ```bash
-python compute_metrics.py --model <model_name>
+python compute_metrics.py --model_name <model_name>
 ```
 
 This computes all CapTrack metrics for the given model responses.
