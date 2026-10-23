@@ -10,6 +10,7 @@ Supports multiple input formats (JSON, JSONL, CSV, Parquet) and flexible column 
 
 import json  
 import argparse  
+import numpy as np
 import pandas as pd  
 from pathlib import Path  
 from typing import Dict, Any, List, Optional, Union  
@@ -186,6 +187,38 @@ def normalize_answer(text: Any) -> str:
     return str(text).strip()
 
 
+def _parse_json(text: Any, types: tuple) -> Any:
+    """Return the parsed value if `text` is a JSON string encoding one of `types`, else None."""
+    if not isinstance(text, str) or text[:1] not in "[{":
+        return None
+    try:
+        value = json.loads(text)
+    except ValueError:
+        return None
+    return value if isinstance(value, types) else None
+
+
+def decode_gold(gold: Any) -> Any:
+    """
+    Restore structured gold answers, which the CapTrack HF dataset stores as a JSON string
+    in a one-element list (e.g. ['{"answer": ..., "supporting_facts": ...}'] -> dict).
+    Plain gold answers (e.g. ['42']) are returned unchanged.
+    """
+    if isinstance(gold, (list, np.ndarray)) and len(gold) == 1:
+        parsed = _parse_json(gold[0], (dict, list))
+        if parsed is not None:
+            return parsed
+    return gold
+
+
+def decode_ctx(ctx: Any) -> Any:
+    """Restore contexts stored as a JSON list of strings (e.g. '["passage"]' -> ["passage"])."""
+    parsed = _parse_json(ctx, list)
+    if parsed is not None and all(isinstance(c, str) for c in parsed):
+        return parsed
+    return ctx
+
+
 def transform_dataframe(  
     df: pd.DataFrame,  
     output_column: str = "outputs",  
@@ -232,6 +265,12 @@ def transform_dataframe(
             raise ValueError(f"Task column '{task_column}' not found in dataframe")  
         df = df[df[task_column] == task_name].copy()  
         logger.info(f"Filtered to {len(df)} records for task '{task_name}'")  
+      
+    # Restore nested fields that the CapTrack HF dataset stores as JSON strings
+    df = df.copy()
+    df[gold_column] = df[gold_column].map(decode_gold)
+    if 'ctx' in df.columns:
+        df['ctx'] = df['ctx'].map(decode_ctx)
       
     # Create standardized dataframe  
     result_df = pd.DataFrame()  
@@ -510,6 +549,9 @@ def save_metrics(
         save_json: Whether to save raw metrics as JSON  
         save_csv: Whether to save metrics as CSV  
         aggregate_metrics: Whether to compute and save aggregated metrics  
+
+    Returns:
+        Path to the metrics CSV (if save_csv), used as input for compare_models.py
     """  
     output_dir = Path(output_dir)  
     output_dir.mkdir(parents=True, exist_ok=True)  
@@ -534,6 +576,7 @@ def save_metrics(
         csv_path = output_dir / f"{base_filename}_metrics.csv"  
         df_detailed.to_csv(csv_path)  
         logger.info(f"✓ Saved metrics to: {csv_path}") 
+        return csv_path
 
 
 def main():  

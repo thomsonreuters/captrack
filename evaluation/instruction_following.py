@@ -1,10 +1,12 @@
 import json  
+import random
 import tempfile  
 import os  
 from typing import Dict, List, Any, Optional  
 import pandas as pd  
-from datasets import load_dataset  
+from huggingface_hub import hf_hub_download  
 import nltk
+import langdetect
   
 # Import the official IFEval evaluation  
 from .ifeval import evaluation_lib  
@@ -33,13 +35,16 @@ def load_ifeval_dataset():
     Load and cache the IFEval dataset from Hugging Face.
       
     Returns:  
-        Dataset object containing IFEval train split (cached after first load)  
+        List of IFEval examples (cached after first load)  
     """  
     global _IFEVAL_DATASET  
     if _IFEVAL_DATASET is None:
         _ensure_nltk_data()  # Ensure NLTK data is available before loading dataset
-        dataset = load_dataset("google/IFEval")  
-        _IFEVAL_DATASET = dataset["train"]  # IFEval only has a train split  
+        # Read the raw IFEval file rather than using datasets.load_dataset, whose local cache
+        # cannot be read across `datasets` versions (e.g. a cache written by datasets>=4)
+        path = hf_hub_download("google/IFEval", "ifeval_input_data.jsonl", repo_type="dataset")
+        with open(path) as f:
+            _IFEVAL_DATASET = [json.loads(line) for line in f if line.strip()]
     return _IFEVAL_DATASET
   
 def compute_ifeval_accuracy(results_df, report_detailed=False):  
@@ -60,6 +65,11 @@ def compute_ifeval_accuracy(results_df, report_detailed=False):
   
     if len(results_df) == 0:  
         return get_empty_ifeval_metrics()
+
+    # The official IFEval instructions fall back to random parameters for invalid values (e.g. a
+    # non-letter in keywords:letter_frequency) and langdetect is randomized; seed both for reproducible scores
+    random.seed(0)
+    langdetect.DetectorFactory.seed = 0
   
     try:  
         # Load the original IFEval dataset  

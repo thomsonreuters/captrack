@@ -45,6 +45,9 @@ def compute_hotpotqa_boolq_accuracy(results_df, dataset_type='HOTPOTQA'):
                 gold_answer = gold_answer['answer']  
                 result = evaluate_hotpotqa_response(problem_id, gold_answer, model_output, context)  
             elif dataset_type.upper() == 'BOOLQ':  
+                # Gold is stored as a one-element list (e.g. ['True'])
+                if isinstance(gold_answer, (list, np.ndarray)) and len(gold_answer) == 1:
+                    gold_answer = gold_answer[0]
                 result = evaluate_boolq_response(problem_id, gold_answer, model_output, context)  
             else:  
                 raise ValueError(f"Unsupported dataset type: {dataset_type}")
