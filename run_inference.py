@@ -129,32 +129,76 @@ class Generator:
 
     def _fit(self, text: str, budget: int) -> str:
         """Truncate text in the middle so it fits in `budget` tokens (no-op for short texts)."""
+        if budget <= 0:
+            return ""
         if len(text) <= budget:
             return text
         ids = self.tokenizer.encode(text, add_special_tokens=False)
         if len(ids) <= budget:
             return text
         half = budget // 2
-        return self.tokenizer.decode(ids[:half]) + self.tokenizer.decode(ids[-half:])
+        tail = budget - half
+        return self.tokenizer.decode(ids[:half]) + self.tokenizer.decode(ids[-tail:])
+
+    def _conversation_token_count(self, messages: List[Dict[str, str]]) -> int:
+        kwargs = self.chat_template_kwargs or {}
+        token_ids = self.tokenizer.apply_chat_template(
+            messages, tokenize=True, add_generation_prompt=True, **kwargs
+        )
+        return len(token_ids)
 
     def build_conversation(self, user_turns: List[str], assistant_turns: List[str], max_tokens: int) -> List[Dict[str, str]]:
-        """Interleave user and assistant turns into chat messages, truncating the first user turn if needed."""
+        """Interleave chat turns and truncate them to fit the context and generation budget."""
         first = user_turns[0]
         if self.system_prompt and not self.system_role_supported:
             first = f"{self.system_prompt}\n\n{first}"
-        # Leave room for the generation (at most half the context) and chat-template tokens
-        budget = self.max_model_len - min(max_tokens, self.max_model_len // 2) - 256
-        budget -= sum(len(self.tokenizer.encode(t, add_special_tokens=False)) for t in user_turns[1:] + assistant_turns)
-        fitted = self._fit(first, budget)
-        self.n_truncated += fitted != first
-
         messages = []
         if self.system_prompt and self.system_role_supported:
             messages.append({"role": "system", "content": self.system_prompt})
-        messages.append({"role": "user", "content": fitted})
+        messages.append({"role": "user", "content": first})
         for assistant, user in zip(assistant_turns, user_turns[1:]):
             messages.append({"role": "assistant", "content": assistant})
             messages.append({"role": "user", "content": user})
+        original_contents = [message["content"] for message in messages]
+
+        generation_budget = min(max_tokens, max(self.max_model_len // 2, 1))
+        prompt_budget = self.max_model_len - generation_budget
+        last_user_index = len(messages) - 1
+        trim_indices = [
+            i for i, message in enumerate(messages)
+            if message["role"] != "system" and i != last_user_index
+        ]
+        if messages[last_user_index]["role"] == "user":
+            trim_indices.append(last_user_index)
+
+        for index in trim_indices:
+            if self._conversation_token_count(messages) <= prompt_budget:
+                break
+
+            text = messages[index]["content"]
+            token_count = len(self.tokenizer.encode(text, add_special_tokens=False))
+            low, high = 0, token_count
+            fitted = ""
+            while low <= high:
+                middle = (low + high) // 2
+                candidate = self._fit(text, middle)
+                messages[index]["content"] = candidate
+                if self._conversation_token_count(messages) <= prompt_budget:
+                    fitted = candidate
+                    low = middle + 1
+                else:
+                    high = middle - 1
+            messages[index]["content"] = fitted
+
+        if self._conversation_token_count(messages) > prompt_budget:
+            raise ValueError(
+                f"Conversation template exceeds max_model_len={self.max_model_len} "
+                f"even after truncation; reduce max_tokens or the system prompt"
+            )
+        self.n_truncated += any(
+            message["content"] != original
+            for message, original in zip(messages, original_contents)
+        )
         return messages
 
     def generate(self, task: str, turns: List[List[str]], answers: Optional[List[List[str]]] = None) -> List[str]:
@@ -168,6 +212,13 @@ class Generator:
         if self.n_truncated:
             logger.warning(f"{task}: truncated {self.n_truncated}/{len(turns)} prompts to fit max_model_len={self.max_model_len}")
 
+        prompt_tokens = max(
+            (self._conversation_token_count(conversation) for conversation in conversations),
+            default=0,
+        )
+        max_tokens = min(max_tokens, self.max_model_len - prompt_tokens)
+        if max_tokens <= 0:
+            raise ValueError(f"No context remains for generation with max_model_len={self.max_model_len}")
         params = SamplingParams(temperature=0.0, top_p=1.0, max_tokens=max_tokens)
         outputs = self.llm.chat(conversations, params, chat_template_kwargs=self.chat_template_kwargs)
         # Drop reasoning traces of thinking models so answer parsers see the final response only
