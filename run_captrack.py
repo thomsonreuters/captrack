@@ -35,13 +35,15 @@ assert CAPTRACK_TASKS == list(TASK_TO_METRIC.keys()), "run_inference.CAPTRACK_TA
 
 def run_inference(model: str, name: str, args: argparse.Namespace, inference_args: list) -> None:
     """Run inference in a separate process so vLLM releases all GPU memory afterwards."""
-    tasks = args.tasks or CAPTRACK_TASKS
+    tasks = list(args.tasks or CAPTRACK_TASKS)
+    if "harmbench.subset" in tasks and "gsm8k.subset" not in tasks:
+        tasks.append("gsm8k.subset")
     if all(output_path(Path(args.responses_dir) / name, t).exists() for t in tasks) and "--overwrite" not in inference_args:
         logger.info(f"✓ All responses for '{name}' already exist - skipping inference")
         return
     cmd = [args.inference_python, str(Path(__file__).parent / "run_inference.py"), "--model", model, "--name", name, "--output_dir", args.responses_dir]
     if args.tasks:
-        cmd += ["--tasks", *args.tasks]
+        cmd += ["--tasks", *tasks]
     # Put the inference environment's bin/ first on PATH, as if it were activated
     env = dict(os.environ, PATH=f"{Path(args.inference_python).parent}{os.pathsep}{os.environ.get('PATH', '')}")
     subprocess.run(cmd + inference_args, check=True, env=env)
