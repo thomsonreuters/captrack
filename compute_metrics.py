@@ -198,16 +198,19 @@ def _parse_json(text: Any, types: tuple) -> Any:
     return value if isinstance(value, types) else None
 
 
-def decode_gold(gold: Any) -> Any:
+def decode_gold(gold: Any, task_name: Optional[str] = None) -> Any:
     """
     Restore structured gold answers, which the CapTrack HF dataset stores as a JSON string
     in a one-element list (e.g. ['{"answer": ..., "supporting_facts": ...}'] -> dict).
-    Plain gold answers (e.g. ['42']) are returned unchanged.
+    Unwrap scalar gold answers stored in one-element lists, while preserving IFEval's
+    list-valued instruction IDs.
     """
     if isinstance(gold, (list, np.ndarray)) and len(gold) == 1:
         parsed = _parse_json(gold[0], (dict, list))
         if parsed is not None:
             return parsed
+        if task_name != "ifeval.subset":
+            return gold[0]
     return gold
 
 
@@ -268,7 +271,9 @@ def transform_dataframe(
       
     # Restore nested fields that the CapTrack HF dataset stores as JSON strings
     df = df.copy()
-    df[gold_column] = df[gold_column].map(decode_gold)
+    df[gold_column] = df[gold_column].map(
+        lambda gold: decode_gold(gold, task_name=task_name)
+    )
     if 'ctx' in df.columns:
         df['ctx'] = df['ctx'].map(decode_ctx)
       
@@ -347,7 +352,7 @@ def load_task_data(
             output_column=output_column,  
             gold_column=gold_column,  
             task_column=task_column,  
-            task_name=task if task_column else None  
+            task_name=task
         )  
           
         return transformed_df  
