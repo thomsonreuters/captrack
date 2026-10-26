@@ -629,8 +629,8 @@ def main():
     parser.add_argument(  
         "--output_dir",  
         type=str,  
-        default="./captrack_results",  
-        help="Directory to save computed metrics (default: ./captrack_results)"  
+        default="./absolute_metrics",  
+        help="Directory to save computed metrics (default: ./absolute_metrics)"  
     )      
       
     parser.add_argument(  

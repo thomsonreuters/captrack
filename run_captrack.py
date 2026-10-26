@@ -70,8 +70,8 @@ def main():
     parser.add_argument("--adapted_name", type=str, default=None, help="Name for the adapted model (default: last part of --adapted)")
     parser.add_argument("--tasks", nargs='+', default=None, help="Specific tasks to run (default: all CapTrack tasks)")
     parser.add_argument("--responses_dir", type=str, default="./model_responses", help="Directory for model responses (default: ./model_responses)")
-    parser.add_argument("--results_dir", type=str, default="./captrack_results", help="Directory for CapTrack metrics (default: ./captrack_results)")
-    parser.add_argument("--comparison_dir", type=str, default="./comparison_results", help="Directory for comparison results (default: ./comparison_results)")
+    parser.add_argument("--results_dir", type=str, default="./absolute_metrics", help="Directory for CapTrack metrics (default: ./absolute_metrics)")
+    parser.add_argument("--comparison_dir", type=str, default="./captrack_relative_results", help="Directory for comparison results (default: ./captrack_relative_results)")
     parser.add_argument("--inference_python", type=str, default=sys.executable, help="Python interpreter of the vLLM environment (default: current interpreter)")
     args, inference_args = parser.parse_known_args()
 

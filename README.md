@@ -130,8 +130,8 @@ captrack/
 ├── evaluation/		       # Metrics and scoring logic
 │
 ├── configs/               # Evaluation configuration files
-├── captrack_results/      # Absolute captrack performances
-├── comparison_results/    # Relative deviation results
+├── absolute_metrics/      # Per-model absolute capability scores (intermediate)
+├── captrack_relative_results/    # Relative drift vs. the base model (the CapTrack result)
 │
 └── model_responses/       # Expected input location (user-provided)
 ```
@@ -152,7 +152,7 @@ python run_captrack.py \
     --inference_python $(conda run -n captrack-vllm which python)
 ```
 
-This runs the three workflow steps below and writes responses to `model_responses/`, metrics to `captrack_results/`, and the heatmap to `comparison_results/`. Inference resumes where it stopped: tasks that already have responses are skipped. Options that `run_captrack.py` does not know are forwarded to `run_inference.py`, e.g.:
+This runs the three workflow steps below and writes responses to `model_responses/`, metrics to `absolute_metrics/`, and the heatmap to `captrack_relative_results/`. Inference resumes where it stopped: tasks that already have responses are skipped. Options that `run_captrack.py` does not know are forwarded to `run_inference.py`, e.g.:
 
 - `--limit 20` — quick smoke test on the first 20 samples per task,
 - `--max_model_len 130000` — context length used in the paper (default: the model's native length),
@@ -236,7 +236,7 @@ This computes all CapTrack metrics for the given model responses.
 Outputs are written to:
 
 ```
-captrack_results/<model_name>/
+absolute_metrics/<model_name>/
 ```
 
 ---
@@ -274,7 +274,7 @@ This step produces:
 - comparison plots,
 - optional CSV/Excel exports.
 
-Outputs are written to `comparison_results`.
+Outputs are written to `captrack_relative_results`.
 
 ---
 
