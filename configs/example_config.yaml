@@ -4,23 +4,23 @@
     
   "model_pairs": [  
     [  
-      "./captrack_results/qwen-3-80b-in-oob_averaged.csv",   
-      "./captrack_results/qwen-3-80b-ioob-dpo-l-final_averaged.csv",     
+      "./absolute_metrics/qwen-3-80b-in-oob_averaged.csv",   
+      "./absolute_metrics/qwen-3-80b-ioob-dpo-l-final_averaged.csv",     
       "Qwen3 80B DPO"  
     ],
     [  
-      "./captrack_results/qwen-3-80b-in-oob_averaged.csv",   
-      "./captrack_results/qwen-3-80b-ioob-ift-l-final_averaged.csv",     
+      "./absolute_metrics/qwen-3-80b-in-oob_averaged.csv",   
+      "./absolute_metrics/qwen-3-80b-ioob-ift-l-final_averaged.csv",     
       "Qwen3 80B IFT"  
     ],
     [  
-      "./captrack_results/qwen-3-80b-in-oob_averaged.csv",   
-      "./captrack_results/qwen-3-80b-iift-dpo-l-final_averaged.csv",     
+      "./absolute_metrics/qwen-3-80b-in-oob_averaged.csv",   
+      "./absolute_metrics/qwen-3-80b-iift-dpo-l-final_averaged.csv",     
       "Qwen3 80B IFT+DPO"  
     ]
   ],   
     
-  "output_dir": "./comparison_results",  
+  "output_dir": "./captrack_relative_results",  
     
   # Available categories: C1-C5 (CAN), W1-W3 (WILL), H1-H6 (HOW). Use null for all categories or array of specific categories
   "categories_to_plot": [

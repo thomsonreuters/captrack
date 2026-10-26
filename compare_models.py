@@ -35,13 +35,13 @@ from evaluation.plotting_utils import (
 DEFAULT_CONFIG = {  
     # Model pairs to compare: [(base_metrics_path, adapted_metrics_path, comparison_name), ...]  
     "model_pairs": [  
-        ("./captrack_results/qwen3-235b-in-oob.csv",   
-         "./captrack_results/qwen3-235b-gspo-legal.csv",   
+        ("./absolute_metrics/qwen3-235b-in-oob.csv",   
+         "./absolute_metrics/qwen3-235b-gspo-legal.csv",   
          "Base vs Adapted"),  
     ],  
       
     # Output directory for figures and results  
-    "output_dir": "./comparison_results",  
+    "output_dir": "./captrack_relative_results",  
       
     # Categories to include (None = all categories)  
     # Examples: ['C1', 'C2', 'W1'], ['C1', 'C2_DD'], None  
@@ -399,7 +399,7 @@ Examples:
     parser.add_argument(  
         "--output",  
         type=str,  
-        default="./comparison_results",  
+        default="./captrack_relative_results",  
         help="Output directory for results"  
     )  
       
